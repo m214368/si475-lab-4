@@ -78,8 +78,8 @@ def hunt(color):
             mapimage = cv2.inRange(hsv, bot, top)
             augimage = image
             augimage[:, :, 1] = np.bitwise_or(image[:, :, 1], mapimage)
-            #cv2.imshow('normal',image)
-            #cv2.imshow('mapped',mapimage)
+            cv2.imshow('normal',image)
+            cv2.imshow('mapped',mapimage)
             cv2.imshow('augmented',augimage)
             height, width = mapimage.shape[0:2]
             total = cv2.countNonZero(mapimage)
