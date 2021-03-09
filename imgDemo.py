@@ -114,31 +114,37 @@ def hunt(color):
     bot = np.array([colormap[color][0]/2, 20, 10])
     top = np.array([colormap[color][1]/2,255,235])
 
-    rate = rospy.Rate(20)
+    rate = rospy.Rate(10)
 
     # initial spin to find largest color blob
     cur_pos = r.getPositionTup()
-    init_ang = current_pos[2]
+    init_ang = cur_pos[2]
+    size = 0
     for i in (pi/2,pi,3*pi/2,2*pi):
 	while True:
 	    cur_pos = r.getPositionTup()
 	    cur_ang = cur_pos[2]
-	    image = r.getImage(self)
+	    image = r.getImage()
 	    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 	    mapimage = cv2.inRange(hsv, bot, top)
+            augimage = image
 	    augimage[:, :, 1] = np.bitwise_or(image[:, :, 1], mapimage)
-	    cv2.imshow('normal',image)
-	    cv2.imshow('mapped',mapimage)
-	    cv2.imshow('augmented'augimage)
+	    #cv2.imshow('normal',image)
+	    #cv2.imshow('mapped',mapimage)
+	    cv2.imshow('augmented',augimage)
 	    height, width = mapimage.shape[0:2]
-	    total = cv2.countNonZero(image)
-	    halfLeft = mapimage(Rect(0, 0, mapimage.cols/2, mapimage.rows))
+	    total = cv2.countNonZero(mapimage)
+            if total > size:
+                size = total
+            width = width//2
+	    halfLeft = mapimage[:,:width]
 	    left = cv2.countNonZero(halfLeft)
-	    halfRight = mapimage(Rect(frame.cols/2, 0, frame.cols/2, mapimage.rows))
+	    halfRight = mapimage[:,width:]
 	    right = cv2.countNonZero(halfRight)
 	    print ("total: "+str(total)+" left: "+str(left)+" right: "+str(right))
 	    r.drive(angSpeed=2, linSpeed=0)
-	    if ( abs(cur_ang-init_ang) < i):
+	    if ( abs(cur_ang-init_ang) > i):
+                print("quarter turn done" + str(i))
 	        break
 	    rate.sleep()
 
@@ -151,9 +157,10 @@ def hunt(color):
     old_pos_error = 0
 
     while True:
-	image = r.getImage(self)
+	image = r.getImage()
 	hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
 	mapimage = cv2.inRange(hsv, bot, top)
+        augimage = image
 	augimage[:, :, 1] = np.bitwise_or(image[:, :, 1], mapimage)
         # current pos
         current_pos = r.getPositionTup()
@@ -186,7 +193,7 @@ def hunt(color):
         print('speed: ' + str(ang_speed) + ' ' + str(lin_speed))
 	cv2.imshow('normal',image)
 	cv2.imshow('mapped',mapimage)
-	cv2.imshow('augmented'augimage)
+	cv2.imshow('augmented',augimage)
 
 
         # set old values
@@ -228,7 +235,7 @@ def Blob():
     else :
 	detector = cv2.SimpleBlobDetector_create(params)
 
-color = input("What color to hunt:")
+color = raw_input("What color to hunt:")
 while True:
-    hunt()
+    hunt(color)
 
