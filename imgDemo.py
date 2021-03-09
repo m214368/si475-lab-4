@@ -59,7 +59,7 @@ def pid_speed(kp, ki, kd, error, old_error, error_list):
 
 def hunt(color):
     speed_limit = 4 # speed limit
-    colormap = {"blue":[210,240],"green":[130,160],"purple":[300,310],"red":[-10,10],"yellow":[50,70]}
+    colormap = {"blue":[210,240],"green":[130,160],"purple":[290,320],"red":[-10,10],"yellow":[50,70]}
     bot = np.array([colormap[color][0]/2, 20, 10])
     top = np.array([colormap[color][1]/2,255,235])
 
@@ -111,7 +111,7 @@ def hunt(color):
 
     r.drive(angSpeed=0, linSpeed=0)
     print("done with spin")
-    print("largest blob",size)
+    print("largest blob: ",size)
 
     # loop until at position
     old_ang_error = 0
