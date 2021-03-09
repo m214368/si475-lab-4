@@ -44,7 +44,7 @@ def pid_speed(kp, ki, kd, error, old_error, error_list):
     # add the error to the integral portion
     if len(error_list) > 5:
         error_list.pop()
-    error_list.append(error)
+        error_list.append(error)
 
     # calculate sum
     error_sum = 0
@@ -58,7 +58,7 @@ def pid_speed(kp, ki, kd, error, old_error, error_list):
     return to_return
 
 def run():
-speed_limit = 4 # speed limit
+    speed_limit = 4 # speed limit
     # take input
     x = float(input("X coordinate? "))
     y = float(input("Y coordinate? "))
@@ -109,52 +109,52 @@ speed_limit = 4 # speed limit
     r.drive(angSpeed=0, linSpeed=0)
 
 def hunt(color):
-	speed_limit = 4 # speed limit
-	colormap = {"blue":[210,240],"green":[130,160],"purple":[300,310],"red":[-10,10],"yellow":[50,70]}
-	bot = np.array([colormap[color][0]/2, 20, 10])
-	top = np.array([colormap[color][1]/2,255,235])
+    speed_limit = 4 # speed limit
+    colormap = {"blue":[210,240],"green":[130,160],"purple":[300,310],"red":[-10,10],"yellow":[50,70]}
+    bot = np.array([colormap[color][0]/2, 20, 10])
+    top = np.array([colormap[color][1]/2,255,235])
 
-	rate = rospy.Rate(20)
+    rate = rospy.Rate(20)
 
-	# initial spin to find largest color blob
-	cur_pos = r.getPositionTup()
-	init_ang = current_pos[2]
-	for i in (pi/2,pi,3*pi/2,2*pi):
-		while True:
-			cur_pos = r.getPositionTup()
-			cur_ang = cur_pos[2]
-			image = r.getImage(self)
-			hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-			mapimage = cv2.inRange(hsv, bot, top)
-			augimage[:, :, 1] = np.bitwise_or(image[:, :, 1], mapimage)
-			cv2.imshow('normal',image)
-			cv2.imshow('mapped',mapimage)
-			cv2.imshow('augmented'augimage)
-			height, width = mapimage.shape[0:2]
-			total = cv2.countNonZero(image)
-			halfLeft = mapimage(Rect(0, 0, mapimage.cols/2, mapimage.rows))
-			left = cv2.countNonZero(halfLeft)
-			halfRight = mapimage(Rect(frame.cols/2, 0, frame.cols/2, mapimage.rows))
-			right = cv2.countNonZero(halfRight)
-			print ("total: "+str(total)+" left: "+str(left)+" right: "+str(right))
-			r.drive(angSpeed=2, linSpeed=0)
-			if ( abs(cur_ang-init_ang) < i):
-				break
-			rate.sleep()
+    # initial spin to find largest color blob
+    cur_pos = r.getPositionTup()
+    init_ang = current_pos[2]
+    for i in (pi/2,pi,3*pi/2,2*pi):
+	while True:
+	    cur_pos = r.getPositionTup()
+	    cur_ang = cur_pos[2]
+	    image = r.getImage(self)
+	    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+	    mapimage = cv2.inRange(hsv, bot, top)
+	    augimage[:, :, 1] = np.bitwise_or(image[:, :, 1], mapimage)
+	    cv2.imshow('normal',image)
+	    cv2.imshow('mapped',mapimage)
+	    cv2.imshow('augmented'augimage)
+	    height, width = mapimage.shape[0:2]
+	    total = cv2.countNonZero(image)
+	    halfLeft = mapimage(Rect(0, 0, mapimage.cols/2, mapimage.rows))
+	    left = cv2.countNonZero(halfLeft)
+	    halfRight = mapimage(Rect(frame.cols/2, 0, frame.cols/2, mapimage.rows))
+	    right = cv2.countNonZero(halfRight)
+	    print ("total: "+str(total)+" left: "+str(left)+" right: "+str(right))
+	    r.drive(angSpeed=2, linSpeed=0)
+	    if ( abs(cur_ang-init_ang) < i):
+	        break
+	    rate.sleep()
 
-	r.drive(angSpeed=0, linSpeed=0)
-	print("done with spin")
-	print("largest blob",size)
+    r.drive(angSpeed=0, linSpeed=0)
+    print("done with spin")
+    print("largest blob",size)
 
     # loop until at position
     old_ang_error = 0
     old_pos_error = 0
 
     while True:
-		image = r.getImage(self)
-		hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-		mapimage = cv2.inRange(hsv, bot, top)
-		augimage[:, :, 1] = np.bitwise_or(image[:, :, 1], mapimage)
+	image = r.getImage(self)
+	hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+	mapimage = cv2.inRange(hsv, bot, top)
+	augimage[:, :, 1] = np.bitwise_or(image[:, :, 1], mapimage)
         # current pos
         current_pos = r.getPositionTup()
         print('current pos: ' + str(current_pos))
@@ -184,9 +184,9 @@ def hunt(color):
 
         r.drive(angSpeed=ang_speed, linSpeed=lin_speed)
         print('speed: ' + str(ang_speed) + ' ' + str(lin_speed))
-		cv2.imshow('normal',image)
-		cv2.imshow('mapped',mapimage)
-		cv2.imshow('augmented'augimage)
+	cv2.imshow('normal',image)
+	cv2.imshow('mapped',mapimage)
+	cv2.imshow('augmented'augimage)
 
 
         # set old values
@@ -196,39 +196,39 @@ def hunt(color):
         print(' ')
 
 def Blob(): 
-	# https://learnopencv.com/blob-detection-using-opencv-python-c/
-	# https://www.geeksforgeeks.org/find-circles-and-ellipses-in-an-image-using-opencv-python/
-	# Setup SimpleBlobDetector parameters.
-	params = cv2.SimpleBlobDetector_Params()
+    # https://learnopencv.com/blob-detection-using-opencv-python-c/
+    # https://www.geeksforgeeks.org/find-circles-and-ellipses-in-an-image-using-opencv-python/
+    # Setup SimpleBlobDetector parameters.
+    params = cv2.SimpleBlobDetector_Params()
+    
+    # Change thresholds
+    params.minThreshold = 10;
+    params.maxThreshold = 200;
 
-	# Change thresholds
-	params.minThreshold = 10;
-	params.maxThreshold = 200;
+    # Filter by Area.
+    params.filterByArea = True
+    params.minArea = 1500
 
-	# Filter by Area.
-	params.filterByArea = True
-	params.minArea = 1500
+    # Filter by Circularity
+    params.filterByCircularity = True
+    params.minCircularity = 0.1
 
-	# Filter by Circularity
-	params.filterByCircularity = True
-	params.minCircularity = 0.1
+    # Filter by Convexity
+    params.filterByConvexity = True
+    params.minConvexity = 0.87
 
-	# Filter by Convexity
-	params.filterByConvexity = True
-	params.minConvexity = 0.87
+    # Filter by Inertia
+    params.filterByInertia = True
+    params.minInertiaRatio = 0.01
 
-	# Filter by Inertia
-	params.filterByInertia = True
-	params.minInertiaRatio = 0.01
-
-	# Create a detector with the parameters
-	ver = (cv2.__version__).split('.')
-	if int(ver[0]) < 3 :
-  		detector = cv2.SimpleBlobDetector(params)
-	else :
-		detector = cv2.SimpleBlobDetector_create(params)
+    # Create a detector with the parameters
+    ver = (cv2.__version__).split('.')
+    if int(ver[0]) < 3 :
+  	detector = cv2.SimpleBlobDetector(params)
+    else :
+	detector = cv2.SimpleBlobDetector_create(params)
 
 color = input("What color to hunt:")
 while True:
-	hunt()
+    hunt()
 
