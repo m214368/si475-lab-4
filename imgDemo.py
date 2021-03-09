@@ -65,6 +65,18 @@ def hunt(color):
 
     rate = rospy.Rate(10)
 
+    # inital camera setup
+    cur_pos = r.getPositionTup()
+    cur_ang = cur_pos[2]
+    image = r.getImage()
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    mapimage = cv2.inRange(hsv, bot, top)
+    augimage = image
+    augimage[:, :, 1] = np.bitwise_or(image[:, :, 1], mapimage)
+    # cv2.imshow('normal',image)
+    # cv2.imshow('mapped',mapimage)
+    cv2.imshow('augmented',augimage)
+
     # initial spin to find largest color blob
     cur_pos = r.getPositionTup()
     init_ang = cur_pos[2]
@@ -78,9 +90,6 @@ def hunt(color):
             mapimage = cv2.inRange(hsv, bot, top)
             augimage = image
             augimage[:, :, 1] = np.bitwise_or(image[:, :, 1], mapimage)
-            cv2.imshow('normal',image)
-            cv2.imshow('mapped',mapimage)
-            cv2.imshow('augmented',augimage)
             height, width = mapimage.shape[0:2]
             total = cv2.countNonZero(mapimage)
             if total > size:
@@ -93,7 +102,7 @@ def hunt(color):
             print ("total: "+str(total)+" left: "+str(left)+" right: "+str(right))
             r.drive(angSpeed=2, linSpeed=0)
             if ( abs(cur_ang-init_ang) > i):
-                    print("quarter turn done" + str(i))
+                print("quarter turn done" + str(i))
                 break
             rate.sleep()
 
@@ -106,16 +115,16 @@ def hunt(color):
     old_pos_error = 0
 
     while True:
-    image = r.getImage()
-    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-    mapimage = cv2.inRange(hsv, bot, top)
+        image = r.getImage()
+        hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+        mapimage = cv2.inRange(hsv, bot, top)
         augimage = image
-    augimage[:, :, 1] = np.bitwise_or(image[:, :, 1], mapimage)
+        augimage[:, :, 1] = np.bitwise_or(image[:, :, 1], mapimage)
         # current pos
         current_pos = r.getPositionTup()
         print('current pos: ' + str(current_pos))
         current_angle = current_pos[2]
-
+        
         # calculate the goal angle
         relative_x = goal_pos[0]-current_pos[0]
         relative_y = goal_pos[1]-current_pos[1]
@@ -140,10 +149,6 @@ def hunt(color):
 
         r.drive(angSpeed=ang_speed, linSpeed=lin_speed)
         print('speed: ' + str(ang_speed) + ' ' + str(lin_speed))
-    cv2.imshow('normal',image)
-    cv2.imshow('mapped',mapimage)
-    cv2.imshow('augmented',augimage)
-
 
         # set old values
         old_ang_error=ang_error
@@ -180,9 +185,9 @@ def Blob():
     # Create a detector with the parameters
     ver = (cv2.__version__).split('.')
     if int(ver[0]) < 3 :
-    detector = cv2.SimpleBlobDetector(params)
+        detector = cv2.SimpleBlobDetector(params)
     else :
-    detector = cv2.SimpleBlobDetector_create(params)
+        detector = cv2.SimpleBlobDetector_create(params)
 
 color = raw_input("What color to hunt:")
 while True:
