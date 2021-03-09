@@ -121,32 +121,32 @@ def hunt(color):
     init_ang = cur_pos[2]
     size = 0
     for i in (pi/2,pi,3*pi/2,2*pi):
-	while True:
-	    cur_pos = r.getPositionTup()
-	    cur_ang = cur_pos[2]
-	    image = r.getImage()
-	    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-	    mapimage = cv2.inRange(hsv, bot, top)
-            augimage = image
-	    augimage[:, :, 1] = np.bitwise_or(image[:, :, 1], mapimage)
-	    #cv2.imshow('normal',image)
-	    #cv2.imshow('mapped',mapimage)
-	    cv2.imshow('augmented',augimage)
-	    height, width = mapimage.shape[0:2]
-	    total = cv2.countNonZero(mapimage)
-            if total > size:
-                size = total
-            width = width//2
-	    halfLeft = mapimage[:,:width]
-	    left = cv2.countNonZero(halfLeft)
-	    halfRight = mapimage[:,width:]
-	    right = cv2.countNonZero(halfRight)
-	    print ("total: "+str(total)+" left: "+str(left)+" right: "+str(right))
-	    r.drive(angSpeed=2, linSpeed=0)
-	    if ( abs(cur_ang-init_ang) > i):
-                print("quarter turn done" + str(i))
-	        break
-	    rate.sleep()
+		while True:
+		    cur_pos = r.getPositionTup()
+		    cur_ang = cur_pos[2]
+		    image = r.getImage()
+		    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+		    mapimage = cv2.inRange(hsv, bot, top)
+		        augimage = image
+		    augimage[:, :, 1] = np.bitwise_or(image[:, :, 1], mapimage)
+		    #cv2.imshow('normal',image)
+		    #cv2.imshow('mapped',mapimage)
+		    cv2.imshow('augmented',augimage)
+		    height, width = mapimage.shape[0:2]
+		    total = cv2.countNonZero(mapimage)
+		        if total > size:
+		            size = total
+		        width = width//2
+		    halfLeft = mapimage[:,:width]
+		    left = cv2.countNonZero(halfLeft)
+		    halfRight = mapimage[:,width:]
+		    right = cv2.countNonZero(halfRight)
+		    print ("total: "+str(total)+" left: "+str(left)+" right: "+str(right))
+		    r.drive(angSpeed=2, linSpeed=0)
+		    if ( abs(cur_ang-init_ang) > i):
+		            print("quarter turn done" + str(i))
+		        break
+	    	rate.sleep()
 
     r.drive(angSpeed=0, linSpeed=0)
     print("done with spin")
