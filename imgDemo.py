@@ -83,9 +83,9 @@ def hunt(color):
             cv2.imshow('augmented',augimage)
             height, width = mapimage.shape[0:2]
             total = cv2.countNonZero(mapimage)
-                if total > size:
-                    size = total
-                width = width//2
+            if total > size:
+                size = total
+            width = width//2
             halfLeft = mapimage[:,:width]
             left = cv2.countNonZero(halfLeft)
             halfRight = mapimage[:,width:]
