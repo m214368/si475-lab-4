@@ -40,32 +40,50 @@ def hunt(color):
     cur_pos = r.getPositionTup()
     init_ang = cur_pos[2]
     size = 0
-    for i in (pi/2,pi,3*pi/2,2*pi):
-        while True:
-            cur_pos = r.getPositionTup()
-            cur_ang = cur_pos[2]
-            image = r.getImage()
-            hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-            mapimage = cv2.inRange(hsv, bot, top)
-            augimage = image
-            augimage[:, :, 1] = np.bitwise_or(image[:, :, 1], mapimage)
-            cv2.imshow('augmented',augimage)
-            cv2.waitKey(1)
-            height, width = mapimage.shape[0:2]
-            total = cv2.countNonZero(mapimage)
-            if total > size:
-                size = total
-            width = width//2 # integer division
-            halfLeft = mapimage[:,:width]
-            left = cv2.countNonZero(halfLeft)
-            halfRight = mapimage[:,width:]
-            right = cv2.countNonZero(halfRight)
-            print ("total: "+str(total)+" left: "+str(left)+" right: "+str(right))
-            r.drive(angSpeed=turn_limit, linSpeed=0)
-            if ( abs(cur_ang-init_ang) > i):
-                print("quarter turn done" + str(i))
-                break
-            rate.sleep()
+
+    # changed to false when spin is done
+    stillSpin = True
+    pastQuarter = False
+
+    while stillSpin:
+        cur_pos = r.getPositionTup()
+        cur_ang = cur_pos[2]
+        image = r.getImage()
+        hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+        mapimage = cv2.inRange(hsv, bot, top)
+        augimage = image
+        augimage[:, :, 1] = np.bitwise_or(image[:, :, 1], mapimage)
+        cv2.imshow('augmented',augimage)
+        cv2.waitKey(1)
+        height, width = mapimage.shape[0:2]
+        total = cv2.countNonZero(mapimage)
+        if total > size:
+            size = total
+        width = width//2 # integer division
+        halfLeft = mapimage[:,:width]
+        left = cv2.countNonZero(halfLeft)
+        halfRight = mapimage[:,width:]
+        right = cv2.countNonZero(halfRight)
+        r.drive(angSpeed=turn_limit, linSpeed=0)
+
+        # For debugging:
+        #print ("total: "+str(total)+" left: "+str(left)+" right: "+str(right))
+        #print("Angle Diff: " + str(abs(cur_ang-init_ang)))
+
+        angleDiff = abs(cur_ang-init_ang)
+
+        # the robot has spun a quarter turn
+        if(angleDiff > pi/2):
+            pastQuarter = True
+
+        # when the robot has done a quarter turn and the
+        # diff btwn original and current is close to 0, we are
+        # done turning
+        if(pastQuarter and angleDiff < 0.1):
+            print("done turning")
+            stillSpin = False
+
+        rate.sleep()
 
     r.drive(angSpeed=0, linSpeed=0)
     print("done with spin")
