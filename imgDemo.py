@@ -28,8 +28,8 @@ def pid_speed(kp, ki, kd, error, old_error, error_list):
     return to_return
 
 def hunt(color):
-    speed_limit = 4 # speed limit
-    turn_limit = 2 # turn speed limit
+    speed_limit = 2 # speed limit
+    turn_limit = .2 # turn speed limit
     colormap = {"blue":[210,240],"green":[130,160],"purple":[290,320],"red":[-10,10],"yellow":[50,70]}
     bot = np.array([colormap[color][0]/2, 20, 10])
     top = np.array([colormap[color][1]/2,255,235])
@@ -67,7 +67,7 @@ def hunt(color):
         r.drive(angSpeed=turn_limit, linSpeed=0)
 
         # For debugging:
-        #print ("total: "+str(total)+" left: "+str(left)+" right: "+str(right))
+        print ("total: "+str(total)+" left: "+str(left)+" right: "+str(right))
         #print("Angle Diff: " + str(abs(cur_ang-init_ang)))
 
         angleDiff = abs(cur_ang-init_ang)
@@ -102,7 +102,6 @@ def hunt(color):
         cv2.waitKey(1)
         # current pos
         current_pos = r.getPositionTup()
-        print('current pos: ' + str(current_pos))
         current_angle = current_pos[2]
         
         height, width = mapimage.shape[0:2]
@@ -114,16 +113,22 @@ def hunt(color):
         right = cv2.countNonZero(halfRight)
         print ("total: "+str(total)+" left: "+str(left)+" right: "+str(right))
 
-        # calculate the goal angle
-        goal_angle = math.atan2(relative_y, relative_x)
-        print('goal angle: ' + str(goal_angle))
-
         # calculate angle speed and lin speed drive
         error = left - right
 
-        # speed
-        ang_speed = pid_speed(-.1, 0, -.01, error, old_error, error_list)
         lin_speed = speed_limit
+        
+        # if none found keep turning right
+        if (total == 0):
+            error = -size/2
+            lin_speed = 0
+
+        # speed
+        ang_speed = pid_speed(.0001, -.0001, -.0001, error, old_error, error_list)
+
+
+        if (ang_speed > turn_limit):
+            ang_speed = turn_limit
 
         r.drive(angSpeed=ang_speed, linSpeed=lin_speed)
         print('speed: ' + str(ang_speed) + ' ' + str(lin_speed))
