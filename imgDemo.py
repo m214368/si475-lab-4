@@ -118,8 +118,8 @@ def hunt(color):
 
         lin_speed = speed_limit
         
-        # if none found keep turning right
-        if (total == 0):
+        # if less than 1/3rd of the original blob size found keep turning right
+        if (total < size/3):
             error = -size/2
             lin_speed = 0
 
