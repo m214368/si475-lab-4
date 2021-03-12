@@ -30,7 +30,7 @@ def pid_speed(kp, ki, kd, error, old_error, error_list):
 def hunt(color):
     speed_limit = 2 # speed limit
     turn_limit = .2 # turn speed limit
-    colormap = {"blue":[210,240],"green":[130,160],"purple":[290,320],"red":[-10,10],"yellow":[50,70]}
+    colormap = {"blue":[220,240],"green":[130,160],"purple":[290,320],"red":[-10,10],"yellow":[50,70]}
     bot = np.array([colormap[color][0]/2, 20, 10])
     top = np.array([colormap[color][1]/2,255,235])
 
